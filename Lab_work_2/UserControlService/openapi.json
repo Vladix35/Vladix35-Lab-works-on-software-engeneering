@@ -1,0 +1,417 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "UserControlAPP",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/conference_users": {
+            "get": {
+                "tags": [
+                    "Взаимодействие с пользователями без авторизации"
+                ],
+                "summary": "endpoint для обычного получения всех пользователей без авториазации",
+                "operationId": "get_conference_users_conference_users_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Взаимодействие с пользователями без авторизации"
+                ],
+                "summary": "endpoint для обычного создания пользователя без авториазации",
+                "operationId": "create_user_conference_users_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserNoneAuth"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conference_users/{user_id}": {
+            "get": {
+                "tags": [
+                    "Взаимодействие с пользователями без авторизации"
+                ],
+                "summary": "endpoint для обычного получения пользователя по его id без авториазации",
+                "operationId": "get_user_conference_users__user_id__get",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "tags": [
+                    "Авторизация по протоколу OAuth2 с паролем, хешированием и JWT-токенами"
+                ],
+                "summary": "endpoint для получения токена по логину/паролю",
+                "operationId": "login_for_access_token_token_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_login_for_access_token_token_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conference_users/me/": {
+            "get": {
+                "tags": [
+                    "Авторизация по протоколу OAuth2 с паролем, хешированием и JWT-токенами"
+                ],
+                "summary": "endpoint для получения информации о пользователе",
+                "operationId": "read_users_me_conference_users_me__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConferenceUser"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/conference_users/me/items/": {
+            "get": {
+                "tags": [
+                    "Авторизация по протоколу OAuth2 с паролем, хешированием и JWT-токенами"
+                ],
+                "summary": "endpoint для проверки активности пользователя",
+                "operationId": "read_own_items_conference_users_me_items__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Body_login_for_access_token_token_post": {
+                "properties": {
+                    "grant_type": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^password$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Grant Type"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "title": "Scope",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Id"
+                    },
+                    "client_secret": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Secret"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "title": "Body_login_for_access_token_token_post"
+            },
+            "ConferenceUser": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "email": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Email"
+                    },
+                    "first_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Last Name"
+                    },
+                    "disabled": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Disabled"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username"
+                ],
+                "title": "ConferenceUser"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "Token": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "title": "Token Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "access_token",
+                    "token_type"
+                ],
+                "title": "Token"
+            },
+            "UserNoneAuth": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "title": "Last Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "email",
+                    "first_name",
+                    "last_name"
+                ],
+                "title": "UserNoneAuth"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "token"
+                    }
+                }
+            }
+        }
+    }
+}

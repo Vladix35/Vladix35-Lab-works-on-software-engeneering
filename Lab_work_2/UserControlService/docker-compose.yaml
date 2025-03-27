@@ -1,0 +1,12 @@
+version: "3.12.3"
+services:
+  project_pi_service:
+    image: user_control_service_image
+    container_name: UserControlService
+    build:
+      context: .
+    ports:
+      - "1252:8000"
+    volumes:
+      - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
