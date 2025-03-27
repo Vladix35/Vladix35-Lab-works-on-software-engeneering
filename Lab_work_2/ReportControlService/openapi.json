@@ -1,0 +1,173 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "ReportControlAPP",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/conference_reports": {
+            "get": {
+                "tags": [
+                    "Взаимодействие с докладами конференции"
+                ],
+                "summary": "endpoint для получения всех докладов",
+                "operationId": "get_conference_reports_conference_reports_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Взаимодействие с докладами конференции"
+                ],
+                "summary": "endpoint для создания доклада",
+                "operationId": "create_conference_report_conference_reports_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConferenceReport"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conference_reports/{report_id}": {
+            "get": {
+                "tags": [
+                    "Взаимодействие с докладами конференции"
+                ],
+                "summary": "endpoint для получения доклада по его id",
+                "operationId": "get_conference_reports_conference_reports__report_id__get",
+                "parameters": [
+                    {
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Report Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ConferenceReport": {
+                "properties": {
+                    "report_name": {
+                        "type": "string",
+                        "title": "Report Name"
+                    },
+                    "speaker": {
+                        "type": "string",
+                        "title": "Speaker"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "report_name",
+                    "speaker"
+                ],
+                "title": "ConferenceReport"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
