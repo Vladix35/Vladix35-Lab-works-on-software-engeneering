@@ -1,3 +1,3 @@
 ![image](https://github.com/user-attachments/assets/62a1589b-562c-4868-8c8e-00d652441e83)
 
-# Запуск каждого микросервиса происходит через команду: docker-compose up
+## Запуск каждого микросервиса происходит через команду: docker-compose up
