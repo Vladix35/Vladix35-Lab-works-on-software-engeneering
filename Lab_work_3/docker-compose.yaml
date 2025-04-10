@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: db
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - /pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  app:
+    build:
+      context: .
+    container_name: user_control_service
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db/postgres"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "1253:8000"
+    volumes:
+      - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    restart: always
+
+volumes:
+  db:
