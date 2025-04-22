@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:5.0
+    command: mongod --port 27020 --bind_ip_all
+    container_name: mongodb
+
+    restart: on-failure
+    volumes:
+        - mongodbdata:/data/db
+    ports:
+      - "27020:27020"
+    healthcheck:
+      test: ["CMD", "mongosh", "--port", "27020", "--eval", "db.adminCommand('ping').ok || exit(1)"]
+      interval: 15s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+  app:
+    build:
+      context: .
+    container_name: report_control_service
+    environment:
+      MONGO_URI: "mongodb://mongodb:27020/?connectTimeoutMS=30000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "1250:8000"
+    volumes:
+      - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    restart: always
+
+volumes:
+     mongodbdata:
