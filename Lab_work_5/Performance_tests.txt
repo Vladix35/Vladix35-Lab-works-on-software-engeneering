@@ -1,0 +1,62 @@
+Измерение производительности запросов на чтение данных с кэшем:
+(myenv) vladix35@DESKTOP-IVF67K4:~/SowtwareEngeneeringWSL/LabWork5/user_control_service$ wrk -t1 -c1 -d10s -s get_conference_users.lua http://localhost:1253
+Running 10s test @ http://localhost:1253
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.82ms    4.54ms  60.80ms   87.24%
+    Req/Sec    19.57      4.25    30.00     82.00%
+  196 requests in 10.01s, 29.98KB read
+Requests/sec:     19.58
+Transfer/sec:      2.99KB
+(myenv) vladix35@DESKTOP-IVF67K4:~/SowtwareEngeneeringWSL/LabWork5/user_control_service$ wrk -t5 -c5 -d10s -s get_conference_users.lua http://localhost:1253
+Running 10s test @ http://localhost:1253
+  5 threads and 5 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.80ms    4.80ms  70.15ms   80.19%
+    Req/Sec    19.27      2.67    30.00     92.40%
+  964 requests in 10.02s, 147.73KB read
+Requests/sec:     96.20
+Transfer/sec:     14.74KB
+(myenv) vladix35@DESKTOP-IVF67K4:~/SowtwareEngeneeringWSL/LabWork5/user_control_service$ wrk -t10 -c10 -d10s -s get_conference_users.lua http://localhost:1253
+Running 10s test @ http://localhost:1253
+  10 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    55.29ms    6.71ms  90.14ms   92.09%
+    Req/Sec    18.07      3.97    30.00     80.50%
+  1807 requests in 10.01s, 276.73KB read
+Requests/sec:    180.48
+Transfer/sec:     27.64KB
+
+
+
+
+
+Измерение производительности запросов на чтение данных без кэша:
+(myenv) vladix35@DESKTOP-IVF67K4:~/SowtwareEngeneeringWSL/LabWork5/user_control_service$ wrk -t1 -c1 -d10s -s get_conference_users.lua http://localhost:1253
+Running 10s test @ http://localhost:1253
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.41ms    4.85ms  70.38ms   84.02%
+    Req/Sec    19.39      2.78    30.00     92.00%
+  194 requests in 10.02s, 29.87KB read
+Requests/sec:     19.36
+Transfer/sec:      2.98KB
+(myenv) vladix35@DESKTOP-IVF67K4:~/SowtwareEngeneeringWSL/LabWork5/user_control_service$ wrk -t5 -c5 -d10s -s get_conference_users.lua http://localhost:1253
+Running 10s test @ http://localhost:1253
+  5 threads and 5 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    58.07ms    7.53ms  80.15ms   50.35%
+    Req/Sec    17.19      4.54    30.00     71.60%
+  860 requests in 10.02s, 131.43KB read
+Requests/sec:     85.84
+Transfer/sec:     13.12KB
+(myenv) vladix35@DESKTOP-IVF67K4:~/SowtwareEngeneeringWSL/LabWork5/user_control_service$ wrk -t10 -c10 -d10s -s get_conference_users.lua http://localhost:1253
+Running 10s test @ http://localhost:1253
+  10 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.63ms   10.32ms 150.68ms   75.72%
+    Req/Sec    15.97      4.92    20.00     59.92%
+  1597 requests in 10.02s, 244.21KB read
+Requests/sec:    159.39
+Transfer/sec:     24.37KB
+(myenv) vladix35@DESKTOP-IVF67K4:~/SowtwareEngeneeringWSL/LabWork5/user_control_service$ 
