@@ -1,0 +1,53 @@
+services:
+  kafka:
+    image: bitnami/kafka:latest
+    environment:
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+
+  user_control_save_in_kafka:
+    build:
+      context: ./user_control_save_in_kafka
+    environment:
+      KAFKA_BOOTSTRAP: "kafka:9092"
+      KAFKA_TOPIC: "conference_users"
+    ports:
+      - "1253:8000"
+    depends_on:
+      - kafka
+
+  user_control_from_kafka_to_db:
+    build:
+      context: ./user_control_from_kafka_to_db
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/postgres"
+      KAFKA_BOOTSTRAP: "kafka:9092"
+      KAFKA_TOPIC: "conference_users"
+    depends_on:
+      - kafka
+      - db
+
+volumes:
+  pgdata:
